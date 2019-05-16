@@ -1,3 +1,7 @@
+5/17/19
+Add filtering buttons to Mangadex Menu
+Port Mangadex Menu to Bookmarklet
+
 5/16/19
 Add wiki as submodule and move pixiv notes
 Push pixiv.js and original non-working implementation
