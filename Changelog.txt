@@ -1,0 +1,6 @@
+5/16/19
+Seperate Readme and Changelog
+Use script.text instead of script.innerText
+Add bookmarklet example files
+Allow non-iframed scoped bookmarklet
+First release and source code tracking
