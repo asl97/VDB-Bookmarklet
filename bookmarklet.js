@@ -1,12 +1,8 @@
 (function(){
 'use strict';
-let _iframe_scope = function(){
+let _scope = function(scope){
     this.dependencies = []
-
-    this.iframe = document.createElement("iframe");
-    this.iframe.style.display = "none";
-    this.loaded = new Promise((resolve,reject)=>{this.iframe.onload = resolve});
-    document.body.appendChild(this.iframe);
+    this.scope = scope
 
     this.load = function(url){
         let script = document.createElement('script');
@@ -15,7 +11,7 @@ let _iframe_scope = function(){
             script.onload = resolve;
             script.onerror = function(){reject(url)};
         });
-        this.iframe.contentDocument.body.appendChild(script);
+        scope.appendChild(script);
         this.dependencies.push(p);
     }
 
@@ -28,18 +24,29 @@ let _iframe_scope = function(){
         });
         let script = document.createElement('script');
         script.innerText = `(${func.toString()})()`;
-        this.iframe.contentDocument.body.appendChild(script);
+        scope.appendChild(script);
     }
 }
 
-let iframe_scope = async function(){
-    let iframe = new _iframe_scope();
-    await iframe.loaded;
-    return iframe;
+let local_scope = async function(){
+    let scope = new _scope(document.body);
+    return scope
 }
 
-let bookmarklet = async function(dependencies, func){
-    let iframe = await iframe_scope();
+let iframe_scope = async function(){
+    let iframe = document.createElement("iframe");
+    iframe.style.display = "none";
+    let loaded = new Promise((resolve,reject)=>{iframe.onload = resolve});
+    document.body.appendChild(iframe);
+
+    await loaded;
+
+    let scope = new _scope(iframe.contentDocument.body);
+    return scope;
+}
+
+let bookmarklet = async function(dependencies, func, scope=iframe_scope){
+    let iframe = await scope();
     for (let dependency of dependencies){
         iframe.load(dependency);
     }
@@ -48,6 +55,8 @@ let bookmarklet = async function(dependencies, func){
     return iframe;
 }
 
+// testcases here
+// iframe scoped
 bookmarklet([
     "test1.js",
     "test2.js",
@@ -55,5 +64,16 @@ bookmarklet([
     ], function(){
         console.log(`${test1}${test2}${test3}`)
     }
+)
+
+// local scoped
+bookmarklet([
+    "test1.js",
+    "test2.js",
+    "test3.js",
+    ], function(){
+        console.log(`${test1}${test2}${test3}`)
+    },
+    local_scope
 )
 })()
