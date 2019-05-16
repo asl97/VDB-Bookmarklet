@@ -1,4 +1,5 @@
 5/16/19
+Add wiki as submodule and move pixiv notes
 Push pixiv.js and original non-working implementation
 Seperate Readme and Changelog
 Use script.text instead of script.innerText

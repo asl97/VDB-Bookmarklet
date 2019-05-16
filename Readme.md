@@ -23,12 +23,6 @@ bookmarklet([], function(){}, local_scope)
 
 Look at [bookmarklet.js](examples/case1/bookmarklet.js) for an example of usage.
 
- Notes
-----
-[Pixiv.js was originally](scratchpad/pixiv.js) implemented using the api, however there was an issue with CORS.
-
-It was reimplemented using the 'poke' method where it send a `GET request` and see if it's successful.
-
  Changelog
 ----
 
