@@ -56,6 +56,11 @@ let bookmarklet = async function(dependencies, func, scope=iframe_scope){
 }
 
 // testcases here
+
+// test1.js, test2.js, test3.js are external resources
+// which defines test1 test2 and test3
+// both should print `Hello World!`
+
 // iframe scoped
 bookmarklet([
     "test1.js",
