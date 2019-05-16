@@ -1,4 +1,5 @@
 5/17/19
+First minify copy-paste ready dist release
 Add filtering buttons to Mangadex Menu
 Port Mangadex Menu to Bookmarklet
 
