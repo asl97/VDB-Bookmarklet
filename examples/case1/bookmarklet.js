@@ -23,7 +23,7 @@ let _scope = function(scope){
             
         });
         let script = document.createElement('script');
-        script.innerText = `(${func.toString()})()`;
+        script.text = `(${func.toString()})()`;
         scope.appendChild(script);
     }
 }
