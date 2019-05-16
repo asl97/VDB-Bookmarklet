@@ -1,6 +1,8 @@
  Viewer Download Button - Bookmarklet version
  ----
  Nothing to see here
+ 
+ Original userscript version: https://gist.github.com/asl97/6a7acacc71f97505416790783805be7a
 
 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
