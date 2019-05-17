@@ -275,6 +275,7 @@ bookmarklet([
             });
         })
     },
+    // Require running in non-isolated scope due to CORS
     local_scope
 )
 })()
