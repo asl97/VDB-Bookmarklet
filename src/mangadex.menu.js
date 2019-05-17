@@ -127,8 +127,13 @@ bookmarklet([
             let json = await r.json();
 
             let links = [];
+            let proxy = 'https://cors-anywhere.herokuapp.com/';
             for (img of json.page_array) {
-                links.push([img,`${json.server}${json.hash}/${img}`]);
+                if(json.server.startsWith('http') && window.location.hostname != json.server.split("/")[2]){
+                    links.push([img,proxy+`${json.server}${json.hash}/${img}`]);
+                }else{
+                    links.push([img,`${json.server}${json.hash}/${img}`]);
+                }
             }
 
             let datas = await process_urls(links);

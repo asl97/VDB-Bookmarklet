@@ -1,3 +1,6 @@
+5/18/19
+Proxy requests when images is not on the same domain (mangadex)
+
 5/17/19
 Add concurrent limits
 Push e621.js and original non-working implementation
