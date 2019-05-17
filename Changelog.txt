@@ -1,4 +1,5 @@
 5/17/19
+Add concurrent limits
 Push e621.js and original non-working implementation
 First minify copy-paste ready dist release
 Add filtering buttons to Mangadex Menu
