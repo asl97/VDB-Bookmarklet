@@ -97,41 +97,61 @@ bookmarklet([
             document.body.removeChild(bg_div);
         };
 
-        // The download function, from mangadex chapter dl userscript, modified
-        DL_button_func = function(chapter_obj, r){
-            fetch(`https://mangadex.org/api/?id=${chapter_obj.chapter_id}&type=chapter`).then(
-                (res) => {return res.json()}
-            ).then(
-                (json) => {
-                    var zip = new JSZip();
-                    // Find every page
-                    for (img of json.page_array) {
-                    	zip.file(img, urlToPromise(`${json.server}${json.hash}/${img}`), {binary:true});
-                    }
-                    // When everything has been downloaded, we can trigger the dl
-                    zip.generateAsync({type:"blob"}, function updateCallback(metadata) {
-                        var msg = "progression : " + metadata.percent.toFixed(2) + " %";
-                        console.log(msg);
-                    }).then(function callback(blob) {
-                        filename = chapter_obj.manga_title + ` - c.${json.chapter.padStart(2,0)}.zip`;
-                        // see FileSaver.js
-                        saveAs(blob, filename);
-                        r(filename);
-                        console.log("done !");
-                    }, function (e) {
-                        alert(e);
-                    });
+        async function urlWithNameToPromise(filename, url){
+            return [filename, await urlToPromise(url)]
+        }
+
+        // limit concurrent async
+        async function process_urls(urls, limit=4) {
+            let executing = [];
+            let promises = [];
+
+            // limit the amount of concurrent requests
+            for (let [filename, url] of urls) {
+                if (executing.length >= limit){
+                    await Promise.race(executing);
                 }
-            )
-            return false;
+                let promise = urlWithNameToPromise(filename, url);
+                executing.push(promise);
+                promises.push(promise);
+                promise.then(()=>{executing.splice(executing.indexOf(promise), 1)})
+            };
+
+            return Promise.all(promises)
+        }
+
+        async function download_images(chapter_obj){
+            var zip = new JSZip();
+
+            let r = await fetch(`https://mangadex.org/api/?id=${chapter_obj.chapter_id}&type=chapter`);
+            let json = await r.json();
+
+            let links = [];
+            for (img of json.page_array) {
+                links.push([img,`${json.server}${json.hash}/${img}`]);
+            }
+
+            let datas = await process_urls(links);
+            for (let [filename, data] of datas){
+                zip.file(filename, data, {binary:true});
+            }
+
+            // When everything has been downloaded, we can trigger the dl
+            zip.generateAsync({type:"blob"}, function updateCallback(metadata) {
+                var msg = "progression : " + metadata.percent.toFixed(2) + " %";
+                console.log(msg);
+            }).then(function callback(blob) {
+                filename = chapter_obj.manga_title + ` - c.${json.chapter.padStart(2,0)}.zip`;
+                saveAs(blob, filename);
+                console.log("done !");
+            }, function (e) {
+                alert(e);
+            });
         }
 
         async function process_dl_tasks(dl_list){
             for (let chapter_obj of dl_list){
-                await new Promise(function(resolve, reject) {
-                    console.log(chapter_obj.name);
-                    DL_button_func(chapter_obj, resolve);
-                })
+                await download_images(chapter_obj);
             }
         }
 
