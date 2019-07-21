@@ -138,14 +138,17 @@ bookmarklet([
         }
 
         async function start(){
+            let json;
             let first_page = await get_page(1);
             process_page(first_page);
             let total_count = first_page.post_count;
             let count = first_page.posts.length;
+
             let page_num = 2;
-            
-            while (count < total_count){
-                let json = await get_page(page_num);
+            json = first_page;
+
+            while (json.posts.length && count < total_count){
+                json = await get_page(page_num);
                 process_page(json)
                 count += json.posts.length;
                 page_num+=1
