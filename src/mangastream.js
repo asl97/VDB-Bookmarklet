@@ -133,8 +133,8 @@ bookmarklet([
         }
 
         let parser = new DOMParser();
-        async function fetch_page(page){
-            link = `https://readms.net/r/${manga_name}/${chapter}/${mangastream_chapter_id}/${page}`;
+        async function fetch_page(page, prefix){
+            link = `https://readms.net/r/${prefix}${manga_name}/${chapter}/${mangastream_chapter_id}/${page}`;
             let r = await fetch(link);
             let text = await r.text();
             let doc = parser.parseFromString(text, "text/html");
@@ -158,9 +158,15 @@ bookmarklet([
             chapter = href_parts.pop();
             manga_name = href_parts.pop();
 
+            extras = [];
+            let extra;
+            while ((extra = href_parts.pop()) !== 'r'){
+                extras.push(extra+'/');
+            }
+
             pages = [];
             for (let page = 1; page<=maxpage; page++){
-                pages.push(fetch_page(page));
+                pages.push(fetch_page(page, extras.join('')));
             }
 
             download_name = `[MangaStream]${manga_name}_c${chapter.padStart(3,0)}.zip`;
