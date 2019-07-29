@@ -93,34 +93,48 @@ bookmarklet([
             }
         }
 
-        async function urlWithNameToPromise(filename, url){
-            return [filename, await urlToPromise(url)]
-        }
-
-        // limit concurrent async
-        async function process_urls(urls, limit=4) {
+        async function _process_urls(queue, limit) {
             let executing = [];
             let promises = [];
 
             // limit the amount of concurrent requests
-            for (let [filename, url] of urls) {
+            for (let [resolve, name, url] of queue) {
                 if (executing.length >= limit){
                     await Promise.race(executing);
                 }
-                let promise = urlWithNameToPromise(filename, url);
+                let promise = urlToPromise(url);
                 executing.push(promise);
                 promises.push(promise);
-                promise.then(()=>{executing.splice(executing.indexOf(promise), 1)})
+                promise.then((data)=>{
+                    executing.splice(executing.indexOf(promise), 1);
+                    resolve([name, data]);
+                });
             };
 
-            return Promise.all(promises)
+        }
+
+        function process_urls(links, limit=4){
+            let promises = [];
+            let queue = [];
+
+            for (let [name, link] of links){
+                promise = new Promise(function(resolve, reject) {
+                    queue.push([resolve, name, link]);
+                });
+
+                promises.push(promise);
+            }
+
+            _process_urls(queue, limit);
+            return promises;
         }
 
         async function download_images(archive_name){
             var zip = new JSZip();
 
-            let datas = await process_urls(links);
-            for (let [filename, data] of datas){
+            let promises = process_urls(links);
+            for (let promise of promises){
+                let [filename, data] = await promise;
                 zip.file(filename, data, {binary:true});
             }
 
