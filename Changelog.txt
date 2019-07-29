@@ -1,3 +1,7 @@
+7/29/19
+Move proxy variable for easier changing
+Add mangastream Bookmarklet
+
 5/18/19
 Proxy requests when images is not on the same domain (mangadex)
 
