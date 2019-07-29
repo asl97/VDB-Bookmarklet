@@ -1,6 +1,7 @@
 (function(){
 'use strict';
 let proxy = 'https://cors-anywhere.herokuapp.com/';
+let host_regex = 'https?://i.pximg.net/img-original/';
 let _scope = function(scope){
     this.dependencies = []
     this.scope = scope
@@ -47,6 +48,11 @@ let iframe_scope = async function(){
 }
 
 let bookmarklet = async function(dependencies, func, scope=iframe_scope){
+    if (!location.href.match(host_regex)){
+        if (!confirm(`Current url doesn't match host regex:\n${host_regex}\n\nContinue?`))
+            return
+    }
+
     let iframe = await scope();
     for (let dependency of dependencies){
         iframe.load(dependency);
