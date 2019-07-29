@@ -1,4 +1,5 @@
 7/29/19
+Add url precheck with popup when running bookmarklet on unexpected pages (mangadex, e621, pixiv, mangastream)
 Move proxy variable for easier changing
 Add mangastream Bookmarklet
 Improve memory handling (mangadex, e621)
