@@ -1,5 +1,6 @@
 (function(){
 'use strict';
+let proxy = 'https://cors-anywhere.herokuapp.com/';
 let _scope = function(scope){
     this.dependencies = []
     this.scope = scope
@@ -23,7 +24,7 @@ let _scope = function(scope){
             
         });
         let script = document.createElement('script');
-        script.text = `(${func.toString()})()`;
+        script.text = `(function(){let proxy='${proxy}'; (${func.toString()})()})()`;
         scope.appendChild(script);
     }
 }
@@ -127,7 +128,6 @@ bookmarklet([
             let json = await r.json();
 
             let links = [];
-            let proxy = 'https://cors-anywhere.herokuapp.com/';
             for (img of json.page_array) {
                 if(json.server.startsWith('http') && window.location.hostname != json.server.split("/")[2]){
                     links.push([img,proxy+`${json.server}${json.hash}/${img}`]);
