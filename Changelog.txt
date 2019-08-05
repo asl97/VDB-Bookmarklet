@@ -1,3 +1,8 @@
+mm/dd/yy
+
+8/6/19
+Fix ordering of page via prefix (mangastream)
+
 7/29/19
 Add url precheck with popup when running bookmarklet on unexpected pages (mangadex, e621, pixiv, mangastream)
 Move proxy variable for easier changing

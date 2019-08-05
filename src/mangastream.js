@@ -138,19 +138,19 @@ bookmarklet([
             });
         }
 
+        let maxpage = 0;
         let parser = new DOMParser();
         async function fetch_page(page, prefix){
             link = `https://readms.net/r/${prefix}${manga_name}/${chapter}/${mangastream_chapter_id}/${page}`;
             let r = await fetch(link);
             let text = await r.text();
             let doc = parser.parseFromString(text, "text/html");
-            image_link = doc.getElementById('manga-page').src;
-            image_name = image_link.split('/').pop();
+            let image_link = doc.getElementById('manga-page').src;
+            let image_name = page.toString().padStart(Math.floor(Math.log10(maxpage))+1, 0)+"_"+image_link.split('/').pop();
             return [image_name, image_link];
         }
 
         async function start(){
-            let maxpage = 0;
             let href_parts;
             for (let li of document.getElementsByClassName('btn-reader-page')[0].getElementsByTagName('li')){
                 href_parts = li.firstChild.href.split('/');
