@@ -147,8 +147,8 @@ bookmarklet([
 
             // When everything has been downloaded, we can trigger the dl
             zip.generateAsync({type:"blob"}, function updateCallback(metadata) {
-                var msg = "progression : " + metadata.percent.toFixed(2) + " %";
-                console.log(msg);
+                //var msg = "progression : " + metadata.percent.toFixed(2) + " %";
+                //console.log(msg);
             }).then(function callback(blob) {
                 // see FileSaver.js
                 saveAs(blob, archive_name);
