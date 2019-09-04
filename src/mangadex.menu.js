@@ -90,7 +90,7 @@ bookmarklet([
             });
         }
 
-        var chapters, langs, checkboxes, chapter_content, bg_div;
+        var chapters, langs, checkboxes, last_checkbox, chapter_content, bg_div;
         langs = {};
         chapters = {};
         checkboxes = {};
@@ -192,6 +192,24 @@ bookmarklet([
             process_dl_tasks(dl_list);
         }
 
+        function multi_select_checkbox_handler(checkbox, event){
+            if (event.shiftKey && last_checkbox){
+                let start, stop;
+                [start, stop] = [checkbox.dataset.id, last_checkbox.dataset.id].sort();
+                for (let el of Object.values(checkboxes)){
+                    if (el.parentElement.style.display === 'none'){
+                        continue;
+                    };
+                    if (start <= el.dataset.id && el.dataset.id <= stop){
+                        el.checked = last_checkbox.checked;
+                    }
+                }
+            } else {
+                checkbox.checked = !checkbox.checked;
+            }
+            last_checkbox = checkbox;
+        }
+
         function el_checkbox(chapter_obj){
             var div, title, lang, checkbox, lang_code, name, group_name;
 
@@ -229,6 +247,12 @@ bookmarklet([
             checkbox = document.createElement('input');
             checkbox.type = "checkbox";
             checkbox.style.display = "table-cell";
+            checkbox.dataset.id = chapter_obj.chapter_id;
+            checkbox.onclick = (e)=>{
+                // HACK: undo default checkbox checking
+                // multi_select_checkbox_handler handles checkbox.checked
+                checkbox.checked = !checkbox.checked;
+            };
 
             checkboxes[chapter_obj.chapter_id] = checkbox;
 
@@ -236,9 +260,7 @@ bookmarklet([
 
             // make clicking on the 'row' the same as clicking on the checkbox
             // makes it less of a pain to click
-            title.onclick = function(){checkbox.click()};
-            lang.onclick = function(){checkbox.click()};
-
+            div.onclick = (e)=>{multi_select_checkbox_handler(checkbox, e)};
             return div
         }
 
@@ -247,7 +269,7 @@ bookmarklet([
                 if (lang_code == "All" || lang_code == el.dataset.lang_code){
                     el.style.display = "table-row";
                 } else {
-                    el.style.display = "None";
+                    el.style.display = "none";
                 }
             }
         }

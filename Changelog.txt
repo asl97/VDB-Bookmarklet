@@ -1,5 +1,8 @@
 mm/dd/yy
 
+9/4/19
+Implement shift click batch checked (mangadex)
+
 8/6/19
 Fix ordering of page via prefix (mangastream)
 
