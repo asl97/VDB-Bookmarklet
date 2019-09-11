@@ -1,6 +1,7 @@
 mm/dd/yy
 
 9/12/19
+New Makefile
 Push whimsubs.js
 
 9/4/19
