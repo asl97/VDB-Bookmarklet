@@ -1,5 +1,8 @@
 mm/dd/yy
 
+9/12/19
+Push whimsubs.js
+
 9/4/19
 Implement shift click batch checked (mangadex)
 
